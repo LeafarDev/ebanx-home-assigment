@@ -30,12 +30,25 @@
         amount (bigint (:amount data))]
     (if (nil? account)
       (do (reset! accounts (conj @accounts {:id account-id :balance amount}))
-          (created ""  {:destination (find-account account-id)}))
+          (created "" {:destination (find-account account-id)}))
 
       (do (reset! accounts
                   (conj (filter #(not= account-id (:id %)) @accounts)
                         {:id account-id :balance (+ amount (:balance account))}))
           (created "" {:destination (find-account account-id)})))))
+
+(defn- withdraw
+  "Withdraw from existing account
+  POST /event {\" type \":\" withdraw \", \" origin \":\" 100 \", \" amount \":5}
+  201 {\" origin \": {\" id \":\" 100 \", \" balance \":15}}"
+  [data]
+  (let [account-id (bigint (:origin data))
+        account (find-account account-id)
+        amount (bigint (:amount data))]
+    (do (reset! accounts
+                (conj (filter #(not= account-id (:id %)) @accounts)
+                      {:id account-id :balance (- (:balance account) amount)}))
+        (created "" {:destination (find-account account-id)}))))
 
 (defn event
   [request]
@@ -43,6 +56,8 @@
         type (:type data)]
     (cond (= type "deposit")
           (deposit data)
+          (= type "withdraw")
+          (withdraw data)
           :else
-          (bad-request ""))))
+          (bad-request "invalid type"))))
 
