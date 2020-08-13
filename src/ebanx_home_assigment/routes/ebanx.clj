@@ -13,6 +13,10 @@
                 200 OK"
       :middleware [cors-mw]
       (ebanxrf/reset))
+    (POST "/event" request
+      :summary "event endpoint"
+      :middleware [cors-mw]
+      (ebanxrf/event request))
     (GET "/balance" []
       :summary "Get balance for non-existing account
                 GET /balance?account_id=123

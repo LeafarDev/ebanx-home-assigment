@@ -4,12 +4,12 @@
 
 (def app
   (->
-    (api
-      {:swagger
-       {:ui   "/"
-        :spec "/swagger.json"
-        :data {:info {:title       "ebanx-home-assigment"
-                      :description " ebanx home assigment"}
-               :tags [{:name "api", :description ""}]}}}
-      ebanx)))
+   (api
+    {:swagger
+     {:ui   "/"
+      :spec "/swagger.json"
+      :data {:info {:title       "ebanx-home-assigment"
+                    :description " ebanx home assigment"}
+             :tags [{:name "api", :description ""}]}}}
+    ebanx)))
 
