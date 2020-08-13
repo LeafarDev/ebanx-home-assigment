@@ -12,4 +12,11 @@
                 POST /reset
                 200 OK"
       :middleware [cors-mw]
-      (ebanxrf/reset))))
+      (ebanxrf/reset))
+    (GET "/balance" []
+      :summary "Get balance for non-existing account
+                GET /balance?account_id=123
+                404 0"
+      :query-params [account_id]
+      :middleware [cors-mw]
+      (ebanxrf/balance account_id))))

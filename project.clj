@@ -10,9 +10,7 @@
             [lein-kibit "0.1.8"]
             [lein-ring "0.12.5"]]
   :ring {:handler ebanx-home-assigment.handler/app}
-  :main ^:skip-aot ebanx-home-assigment.core
   :uberjar-name "ebanx.jar"
-  :jvm-opts ["-Duser.timezone=Etc/UCT" "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8080"]
   :profiles {
              ;; Set these in ./profiles.clj
              :test-env-vars {}
