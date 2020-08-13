@@ -45,10 +45,12 @@
   (let [account-id (bigint (:origin data))
         account (find-account account-id)
         amount (bigint (:amount data))]
-    (do (reset! accounts
+   (if (nil? account)
+     (not-found! "0")
+     (do (reset! accounts
                 (conj (filter #(not= account-id (:id %)) @accounts)
                       {:id account-id :balance (- (:balance account) amount)}))
-        (created "" {:destination (find-account account-id)}))))
+        (created "" {:destination (find-account account-id)})))))
 
 (defn event
   [request]
