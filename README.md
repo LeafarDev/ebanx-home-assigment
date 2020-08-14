@@ -2,7 +2,7 @@
 
 The API consists of two endpoints, GET /balance, and POST /event. Using your favorite programming language, build a system that can handle those requests, publish it on the internet, and test it using our automated test suite.
 ### Running localhost
-`lein ring server`
+`lein ring server 3000`
 
 ### Running jar
 ```
