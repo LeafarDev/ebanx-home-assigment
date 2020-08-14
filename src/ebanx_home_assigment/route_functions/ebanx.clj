@@ -11,7 +11,7 @@
   (first (filter #(= account-id (:id %)) @accounts)))
 
 (defn balance [account-id]
-  (let [account (find-account (bigint account-id))]
+  (let [account (find-account (str account-id))]
     (if (nil? account)
       (not-found! "0")
       (ok (str (:balance account))))))
@@ -20,12 +20,12 @@
   [account-id amount]
   (reset! accounts
           (conj (filter #(not= account-id (:id %)) @accounts)
-                {:id account-id :balance (- (:balance (find-account (bigint account-id))) amount)})))
+                {:id account-id :balance (- (:balance (find-account (str account-id))) amount)})))
 
 (defn- increase-account-balance
   [account-id amount]
   (reset! accounts (conj (filter #(not= account-id (:id %)) @accounts)
-                         {:id account-id :balance (+ amount (:balance (find-account (bigint account-id))))})))
+                         {:id account-id :balance (+ amount (:balance (find-account (str account-id))))})))
 
 (defn- deposit
   "Create account with initial balance
@@ -36,7 +36,7 @@
   POST /event {\"type\":\"deposit\", \"destination\":\"100\", \"amount\":10}
   201 {\"destination\": {\"id\":\"100\", \"balance\":20}}"
   [data]
-  (let [account-id (bigint (:destination data))
+  (let [account-id (str (:destination data))
         account (find-account account-id)
         amount (bigint (:amount data))]
     (if (nil? account)
@@ -54,13 +54,13 @@
   POST /event {\" type \":\" withdraw \", \" origin \":\" 100 \", \" amount \":5}
   201 {\" origin \": {\" id \":\" 100 \", \" balance \":15}}"
   [data]
-  (let [account-id (bigint (:origin data))
+  (let [account-id (str (:origin data))
         account (find-account account-id)
         amount (bigint (:amount data))]
     (if (nil? account)
       (not-found! "0")
       (do (decrease-account-balance account-id amount)
-          (created "" {:destination (find-account account-id)})))))
+          (created "" {:origin (find-account account-id)})))))
 
 (defn- transfer
   "Transfer from existing account
@@ -71,9 +71,9 @@
   POST /event {\"type\":\"transfer\", \"origin\":\"200\", \"amount\":15, \"destination\":\"300\"}
   404 0"
   [data]
-  (let [origin-account-id (bigint (:origin data))
+  (let [origin-account-id (str (:origin data))
         origin-account (find-account origin-account-id)
-        destination-account-id (bigint (:destination data))
+        destination-account-id (str (:destination data))
         destination-account (find-account destination-account-id)
         amount (bigint (:amount data))]
     (if (nil? origin-account)
